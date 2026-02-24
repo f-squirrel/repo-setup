@@ -2,6 +2,7 @@
 MARKDOWNLINT_IMAGE := davidanson/markdownlint-cli2:latest
 COMMITLINT_IMAGE   := commitlint/commitlint:latest
 MLC_IMAGE          := becheran/mlc:latest
+CHECKMAKE_IMAGE    := quay.io/checkmake/checkmake:latest
 
 DOCKER_RUN := docker run --rm --interactive --tty \
 	--user ${shell id -u}:${shell id -g} \
@@ -9,9 +10,9 @@ DOCKER_RUN := docker run --rm --interactive --tty \
 
 
 .SILENT:
-.PHONY: check md-check md-fix md-links commit-check help
+.PHONY: check md-check md-fix md-links commit-check make-check help
 
-check: md-check md-links commit-check ## Run all checks (lint, links, commits)
+check: md-check md-links commit-check make-check ## Run all checks (lint, links, commits)
 
 help: ## Show available targets
 	@cat ${MAKEFILE_LIST} | grep -E '^[a-zA-Z%_-]+:.*?## .*$$' | \
@@ -25,6 +26,10 @@ md-fix: ## Fix markdown linting errors
 
 md-links: ## Check markdown files for broken links
 	${DOCKER_RUN} ${MLC_IMAGE} mlc
+
+make-check: ## Lint all Makefiles
+	${DOCKER_RUN} --entrypoint /checkmake ${CHECKMAKE_IMAGE} \
+		$$(find . -path '*/.*' -prune -o \( -name 'Makefile' -o -name '*.mk' \) -print)
 
 commit-check: ## Lint commit messages since fork from default branch
 	@default_branch=$$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'); \
