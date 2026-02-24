@@ -11,11 +11,13 @@ dependency is Docker itself.
 | [markdownlint-cli2][mdl] | Lint and auto-fix Markdown |
 | [mlc][mlc] | Detect broken links in Markdown |
 | [commitlint][cl] | Enforce [Conventional Commits][cc] |
+| [checkmake][cm] | Lint Makefiles |
 
 [mdl]: https://github.com/DavidAnson/markdownlint-cli2
 [mlc]: https://github.com/becheran/mlc
 [cl]: https://commitlint.js.org/
 [cc]: https://www.conventionalcommits.org/
+[cm]: https://github.com/checkmake/checkmake
 
 ## Prerequisites
 
@@ -37,6 +39,7 @@ make md-check       # Lint Markdown files
 make md-fix         # Auto-fix Markdown lint errors
 make md-links       # Check for broken links in Markdown
 make commit-check   # Lint commit messages since fork from default branch
+make make-check     # Lint Makefiles
 ```
 
 List all available targets:
@@ -69,6 +72,9 @@ Copy the following files into your repository root:
 - `Makefile`
 - `commitlint.config.mjs`
 
+Optionally, copy `.cursor/agents/` into your `.cursor/` directory to get
+Cursor agent support for fixing lint issues.
+
 ### Option 2: Add as a Git submodule
 
 This keeps the setup linked to the upstream repository so you can pull updates.
@@ -87,6 +93,15 @@ ln -s repo-setup/Makefile Makefile
 ln -s repo-setup/commitlint.config.mjs commitlint.config.mjs
 git add Makefile commitlint.config.mjs
 git commit -m "chore: link repo-setup config files"
+```
+
+Optionally, copy the Cursor agents into your workspace:
+
+```sh
+mkdir -p .cursor/agents
+cp repo-setup/.cursor/agents/*.md .cursor/agents/
+git add .cursor/agents
+git commit -m "chore: add repo-setup Cursor agents"
 ```
 
 To pull the latest changes later:
