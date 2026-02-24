@@ -10,9 +10,15 @@ DOCKER_RUN := docker run --rm --interactive --tty \
 
 
 .SILENT:
-.PHONY: check md-check md-fix md-links commit-check make-check help
+.PHONY: all check md-check md-fix md-links commit-check make-check clean test help
+
+all: check ## Run all checks (default target)
 
 check: md-check md-links commit-check make-check ## Run all checks (lint, links, commits)
+
+clean: ## Remove generated artifacts
+
+test: check ## Run all checks
 
 help: ## Show available targets
 	@cat ${MAKEFILE_LIST} | grep -E '^[a-zA-Z%_-]+:.*?## .*$$' | \
@@ -32,12 +38,7 @@ make-check: ## Lint all Makefiles
 		$$(find . -path '*/.*' -prune -o \( -name 'Makefile' -o -name '*.mk' \) -print)
 
 commit-check: ## Lint commit messages since fork from default branch
-	@default_branch=$$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'); \
-	if [ -n "$$default_branch" ]; then \
-		from=$$(git merge-base HEAD "origin/$$default_branch"); \
-	else \
-		echo "WARNING: default branch not set; run 'git remote set-head origin --auto' to configure it"; \
-		echo "Falling back to checking all commits"; \
-		from=$$(git rev-list --max-parents=0 HEAD); \
-	fi; \
+	@db=$$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'); \
+	if [ -n "$$db" ]; then from=$$(git merge-base HEAD "origin/$$db"); \
+	else echo "WARNING: default branch not set; run 'git remote set-head origin --auto' to configure it" && echo "Falling back to checking all commits" && from=$$(git rev-list --max-parents=0 HEAD); fi; \
 	${DOCKER_RUN} ${COMMITLINT_IMAGE} --from "$$from" --to HEAD
