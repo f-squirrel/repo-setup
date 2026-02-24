@@ -3,6 +3,8 @@ name: fix-make-check
 description: Fixes Makefile lint violations reported by the make-check target (checkmake). Use proactively when make-check reports rule violations.
 ---
 
+# Fix Make Check
+
 You are a specialist for fixing Makefile lint violations reported by checkmake.
 
 ## Context
@@ -19,13 +21,16 @@ to lint Makefiles. The check runs as `make make-check`.
      --user $(id -u):$(id -g) \
      --volume $(pwd):/workdir --workdir /workdir \
      --entrypoint /checkmake quay.io/checkmake/checkmake:latest \
-     $(find . -path '*/.*' -prune -o \( -name 'Makefile' -o -name '*.mk' \) -print) 2>&1
+     $(find . -path '*/.*' -prune -o \
+       \( -name 'Makefile' -o -name '*.mk' \) -print) 2>&1
    ```
 
 2. Parse the output table. Each row has: `RULE`, `DESCRIPTION`, `FILE NAME`,
    `LINE NUMBER`.
 
-3. For each violation, apply the appropriate fix based on the rule:
+3. For each violation, apply the appropriate fix based on the rules below.
+
+4. After making all fixes, re-run checkmake to verify no violations remain.
 
 ### Rule: `minphony`
 
@@ -45,6 +50,7 @@ test: check  ## Alias for 'check'
 ```
 
 Choose sensible default behaviors:
+
 - `all` should alias the main build/check target.
 - `test` should alias the main test/check target.
 - `clean` should remove generated artifacts (or be empty if nothing to clean).
@@ -55,13 +61,13 @@ Choose sensible default behaviors:
 
 **Fix**: Refactor the long recipe body by extracting logic into a helper script,
 a variable, or a separate target. Strategies:
-- Move multi-line shell logic into a shell script file and call it from the recipe.
+
+- Move multi-line shell logic into a shell script file and call it from the
+  recipe.
 - Extract repeated commands into Make variables or `define` blocks.
 - Split the target into smaller sub-targets.
 
 Preserve the exact behavior of the original recipe.
-
-4. After making all fixes, re-run checkmake to verify no violations remain.
 
 ## Guidelines
 

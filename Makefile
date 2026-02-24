@@ -25,10 +25,10 @@ help: ## Show available targets
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 md-check: ## Check markdown files for linting errors
-	${DOCKER_RUN} ${MARKDOWNLINT_IMAGE} "**/*.md" "#.cursor"
+	${DOCKER_RUN} ${MARKDOWNLINT_IMAGE} "**/*.md"
 
 md-fix: ## Fix markdown linting errors
-	${DOCKER_RUN} ${MARKDOWNLINT_IMAGE} --fix "**/*.md" "#.cursor"
+	${DOCKER_RUN} ${MARKDOWNLINT_IMAGE} --fix "**/*.md"
 
 md-links: ## Check markdown files for broken links
 	${DOCKER_RUN} ${MLC_IMAGE} mlc
