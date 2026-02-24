@@ -6,11 +6,16 @@ dependency is Docker itself.
 
 ## What's Included
 
-| Tool                                                                 | Purpose                                                              |
-|----------------------------------------------------------------------|----------------------------------------------------------------------|
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) | Lint and auto-fix Markdown files                                     |
-| [mlc](https://github.com/becheran/mlc)                               | Detect broken links in Markdown                                      |
-| [commitlint](https://commitlint.js.org/)                             | Enforce [Conventional Commits](https://www.conventionalcommits.org/) |
+| Tool | Purpose |
+| --- | --- |
+| [markdownlint-cli2][mdl] | Lint and auto-fix Markdown |
+| [mlc][mlc] | Detect broken links in Markdown |
+| [commitlint][cl] | Enforce [Conventional Commits][cc] |
+
+[mdl]: https://github.com/DavidAnson/markdownlint-cli2
+[mlc]: https://github.com/becheran/mlc
+[cl]: https://commitlint.js.org/
+[cc]: https://www.conventionalcommits.org/
 
 ## Prerequisites
 
