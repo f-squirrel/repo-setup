@@ -4,7 +4,9 @@ COMMITLINT_IMAGE   := commitlint/commitlint:latest
 MLC_IMAGE          := becheran/mlc:latest
 CHECKMAKE_IMAGE    := quay.io/checkmake/checkmake:latest
 
-DOCKER_RUN := docker run --rm --interactive --tty \
+TTY_FLAG := $(if $(NO_TTY),,--tty)
+
+DOCKER_RUN := docker run --rm --interactive $(TTY_FLAG) \
 	--user ${shell id -u}:${shell id -g} \
 	--volume ${CURDIR}:/workdir --workdir /workdir
 

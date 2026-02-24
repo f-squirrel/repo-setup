@@ -17,12 +17,7 @@ to lint Makefiles. The check runs as `make make-check`.
 1. Run checkmake to get the current list of violations:
 
    ```sh
-   docker run --rm --interactive \
-     --user $(id -u):$(id -g) \
-     --volume $(pwd):/workdir --workdir /workdir \
-     --entrypoint /checkmake quay.io/checkmake/checkmake:latest \
-     $(find . -path '*/.*' -prune -o \
-       \( -name 'Makefile' -o -name '*.mk' \) -print) 2>&1
+   make make-check NO_TTY=1 2>&1
    ```
 
 2. Parse the output table. Each row has: `RULE`, `DESCRIPTION`, `FILE NAME`,

@@ -17,10 +17,7 @@ Markdown files for broken links. The check runs as `make md-links`.
 1. Run the link checker to get the current list of problems:
 
    ```sh
-   docker run --rm --interactive \
-     --user $(id -u):$(id -g) \
-     --volume $(pwd):/workdir --workdir /workdir \
-     becheran/mlc:latest mlc 2>&1
+   make md-links NO_TTY=1 2>&1
    ```
 
 2. Parse the output for lines tagged `[Warn]` (redirects) and `[Error]`
