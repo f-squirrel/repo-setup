@@ -2,6 +2,7 @@
 MARKDOWNLINT_IMAGE := davidanson/markdownlint-cli2:latest
 COMMITLINT_IMAGE   := commitlint/commitlint:latest
 MLC_IMAGE          := becheran/mlc:latest
+YAMLLINT_IMAGE     := cytopia/yamllint:latest
 CHECKMAKE_IMAGE    := quay.io/checkmake/checkmake:latest
 
 TTY_FLAG := $(if $(NO_TTY),,--tty)
@@ -12,11 +13,11 @@ DOCKER_RUN := docker run --rm --interactive $(TTY_FLAG) \
 
 
 .SILENT:
-.PHONY: all check md-check md-fix md-links commit-check make-check clean test help
+.PHONY: all check md-check md-fix md-links yaml-check commit-check make-check clean test help
 
 all: check ## Run all checks (default target)
 
-check: md-check md-links commit-check make-check ## Run all checks (lint, links, commits)
+check: md-check md-links yaml-check commit-check make-check ## Run all checks (lint, links, commits)
 
 clean: ## Remove generated artifacts
 
@@ -34,6 +35,9 @@ md-fix: ## Fix markdown linting errors
 
 md-links: ## Check markdown files for broken links
 	${DOCKER_RUN} ${MLC_IMAGE} mlc
+
+yaml-check: ## Lint YAML files
+	${DOCKER_RUN} ${YAMLLINT_IMAGE} --strict .
 
 make-check: ## Lint all Makefiles
 	${DOCKER_RUN} --entrypoint /checkmake ${CHECKMAKE_IMAGE} \
