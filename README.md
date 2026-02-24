@@ -19,7 +19,7 @@ dependency is Docker itself.
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/)
+- [Docker](https://docs.docker.com/get-started/get-docker/)
 - GNU Make
 
 ## Usage
