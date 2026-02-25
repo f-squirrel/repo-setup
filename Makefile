@@ -1,9 +1,14 @@
+LOCAL_MK ?= local.mk
+-include ${LOCAL_MK}
 
-MARKDOWNLINT_IMAGE := davidanson/markdownlint-cli2:latest
-COMMITLINT_IMAGE   := commitlint/commitlint:latest
-MLC_IMAGE          := becheran/mlc:latest
-YAMLLINT_IMAGE     := cytopia/yamllint:latest
-CHECKMAKE_IMAGE    := quay.io/checkmake/checkmake:latest
+MARKDOWNLINT_IMAGE ?= davidanson/markdownlint-cli2:latest
+COMMITLINT_IMAGE   ?= commitlint/commitlint:latest
+MLC_IMAGE          ?= becheran/mlc:latest
+YAMLLINT_IMAGE     ?= cytopia/yamllint:latest
+CHECKMAKE_IMAGE    ?= quay.io/checkmake/checkmake:latest
+
+COMMITLINT_CONFIG ?= commitlint.config.mjs
+YAMLLINT_CONFIG   ?= .yamllint.yaml
 
 TTY_FLAG := $(if $(NO_TTY),,--tty)
 
@@ -16,7 +21,7 @@ DOCKER_RUN := docker run --rm --interactive $(TTY_FLAG) \
 .PHONY: all check md-check md-fix md-links yaml-check commit-check make-check clean test help
 
 all: check ## Run all checks (default target)
-
+ 
 check: md-check md-links yaml-check commit-check make-check ## Run all checks (lint, links, commits)
 
 clean: ## Remove generated artifacts
@@ -37,7 +42,7 @@ md-links: ## Check markdown files for broken links
 	${DOCKER_RUN} ${MLC_IMAGE} mlc
 
 yaml-check: ## Lint YAML files
-	${DOCKER_RUN} ${YAMLLINT_IMAGE} --strict .
+	${DOCKER_RUN} ${YAMLLINT_IMAGE} -c ${YAMLLINT_CONFIG} --strict .
 
 make-check: ## Lint all Makefiles
 	${DOCKER_RUN} --entrypoint /checkmake ${CHECKMAKE_IMAGE} \
@@ -47,4 +52,4 @@ commit-check: ## Lint commit messages since fork from default branch
 	@db=$$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'); \
 	if [ -n "$$db" ]; then from=$$(git merge-base HEAD "origin/$$db"); \
 	else echo "WARNING: default branch not set; run 'git remote set-head origin --auto' to configure it" && echo "Falling back to checking all commits" && from=$$(git rev-list --max-parents=0 HEAD); fi; \
-	${DOCKER_RUN} ${COMMITLINT_IMAGE} --from "$$from" --to HEAD
+	${DOCKER_RUN} ${COMMITLINT_IMAGE} --config ${COMMITLINT_CONFIG} --from "$$from" --to HEAD

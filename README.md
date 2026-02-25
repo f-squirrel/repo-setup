@@ -63,6 +63,60 @@ docs: update installation instructions
 chore: upgrade dependencies
 ```
 
+## Customization
+
+All Makefile variables use `?=` (conditional assignment), so you can override
+any of them. The Makefile includes `-include ${LOCAL_MK}` at the top (defaulting
+to `local.mk`), which lets you persist overrides in a file that won't conflict
+with upstream updates. You can point `LOCAL_MK` at a different path if needed.
+
+### Overridable variables
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `LOCAL_MK` | `local.mk` | Path to the optional overrides file |
+| `COMMITLINT_CONFIG` | `commitlint.config.mjs` | Path to commitlint config |
+| `YAMLLINT_CONFIG` | `.yamllint.yaml` | Path to yamllint config |
+| `COMMITLINT_IMAGE` | `commitlint/commitlint:latest` | commitlint image |
+| `MARKDOWNLINT_IMAGE` | `davidanson/markdownlint-cli2:latest` | mdlint image |
+| `YAMLLINT_IMAGE` | `cytopia/yamllint:latest` | yamllint image |
+| `MLC_IMAGE` | `becheran/mlc:latest` | link checker image |
+| `CHECKMAKE_IMAGE` | `quay.io/checkmake/checkmake:latest` | checkmake image |
+
+### Override methods
+
+**Option A — overrides file** (recommended for persistent overrides):
+
+Create a `local.mk` (or any custom path) in your project root:
+
+```makefile
+COMMITLINT_CONFIG = my-commitlint.config.mjs
+YAMLLINT_CONFIG   = .yamllint-custom.yaml
+```
+
+To use a different file name or path, pass `LOCAL_MK`:
+
+```sh
+make check LOCAL_MK=overrides.mk
+```
+
+**Option B — command line**:
+
+```sh
+make commit-check COMMITLINT_CONFIG=my-commitlint.config.mjs
+```
+
+**Option C — environment variable**:
+
+```sh
+export COMMITLINT_CONFIG=my-commitlint.config.mjs
+make commit-check
+```
+
+**Option D — replace the config file directly**: if you copied the files
+(rather than using a submodule), simply edit `commitlint.config.mjs` or
+`.yamllint.yaml` in place.
+
 ## Adding to a New Project
 
 ### Option 1: Copy the files
