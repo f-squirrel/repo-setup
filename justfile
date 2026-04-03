@@ -5,13 +5,15 @@ first_commit := `git rev-list --max-parents=0 HEAD`
 uid := `id -u`
 gid := `id -g`
 docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo --user " + uid + ":" + gid
+check := "check"
+fix := "fix"
 
 # Run all linters
 lint: commit-lint md-lint just-fmt
 
 # Format justfile. mode: check (default) or fix
-just-fmt mode="check":
-    just --unstable {{ if mode == "fix" { "--fmt" } else { "--fmt --check" } }} --justfile {{ local_dir }}/justfile
+just-fmt mode=check:
+    just --unstable {{ if mode == fix { "--fmt" } else { "--fmt --check" } }} --justfile {{ local_dir }}/justfile
 
 # Check all commits follow Conventional Commits specification
 commit-lint:
@@ -21,5 +23,5 @@ commit-lint:
         --to HEAD
 
 # Lint markdown files. mode: check (default) or fix
-md-lint mode="check":
-    {{ docker_run }} davidanson/markdownlint-cli2 {{ if mode == "fix" { "--fix" } else { "" } }} "**/*.md"
+md-lint mode=check:
+    {{ docker_run }} davidanson/markdownlint-cli2 {{ if mode == fix { "--fix" } else { "" } }} "**/*.md"
