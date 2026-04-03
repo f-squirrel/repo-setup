@@ -17,7 +17,7 @@ init:
     ln --symbolic --force "$rel/.commitlintrc.yml" {{ local_dir }}/.commitlintrc.yml
 
 # Run all linters
-lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check shell-lint
+lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check shell-lint kdl-fmt
 
 nix_docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo"
 nix_run := nix_docker_run + " nixos/nix nix --extra-experimental-features 'nix-command flakes'"
@@ -63,3 +63,8 @@ link-check:
 shell-lint:
     {{ docker_run }} --entrypoint sh koalaman/shellcheck-alpine \
         -c "find . -name '*.sh' -not -path './.git/*' | xargs -r shellcheck"
+
+# Format KDL files. mode: check (default) or fix
+kdl-fmt mode=check:
+    docker run --tty --rm --volume {{ local_dir }}:/repo --workdir /repo node:alpine \
+        sh -c "npx --yes kdlfmt {{ if mode == fix { "format" } else { "check" } }} ."
