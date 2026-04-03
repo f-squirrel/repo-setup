@@ -7,7 +7,11 @@ gid := `id -g`
 docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo --user " + uid + ":" + gid
 
 # Run all linters
-lint: commit-lint md-lint
+lint: commit-lint md-lint just-fmt
+
+# Format justfile. mode: check (default) or fix
+just-fmt mode="check":
+    just --unstable {{if mode == "fix" { "--fmt" } else { "--fmt --check" }}} --justfile {{local_dir}}/justfile
 
 # Check all commits follow Conventional Commits specification
 commit-lint:
