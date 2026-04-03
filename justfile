@@ -11,3 +11,6 @@ commit-lint:
         commitlint/commitlint \
         --from {{first_commit}} \
         --to HEAD
+
+md-lint mode="check":
+    {{docker_run}} davidanson/markdownlint-cli2 {{if mode == "fix" { "--fix" } else { "" }}} "**/*.md"
