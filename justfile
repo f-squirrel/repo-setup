@@ -6,6 +6,9 @@ uid := `id -u`
 gid := `id -g`
 docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo --user " + uid + ":" + gid
 
+# Run all linters
+lint: commit-lint md-lint
+
 # Check all commits follow Conventional Commits specification
 commit-lint:
     {{docker_run}} \
