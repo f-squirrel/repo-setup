@@ -26,7 +26,7 @@ nix_run := nix_docker_run + " nixos/nix nix --extra-experimental-features 'nix-c
 nix-fmt mode=check:
     #!/usr/bin/env sh
     docker run --tty --rm --volume {{ local_dir }}:/repo --workdir /repo nixos/nix \
-        sh -c "find . -name '*.nix' -not -path './.git/*' | xargs nix --extra-experimental-features 'nix-command flakes' run nixpkgs#nixfmt -- {{ if mode == fix { "" } else { "--check" } }}"
+        sh -c "find . -name '*.nix' -not -path './.git/*' | xargs -r nix --extra-experimental-features 'nix-command flakes' run nixpkgs#nixfmt -- {{ if mode == fix { "" } else { "--check" } }}"
 
 # Lint Nix files for antipatterns
 nix-lint mode=check:
