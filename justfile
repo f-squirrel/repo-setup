@@ -9,7 +9,7 @@ check := "check"
 fix := "fix"
 
 # Run all linters
-lint: commit-lint md-lint just-fmt
+lint: commit-lint md-lint yaml-lint just-fmt
 
 # Format justfile. mode: check (default) or fix
 just-fmt mode=check:
@@ -21,6 +21,10 @@ commit-lint:
         commitlint/commitlint \
         --from {{ first_commit }} \
         --to HEAD
+
+# Lint YAML files
+yaml-lint:
+    {{ docker_run }} pipelinecomponents/yamllint yamllint .
 
 # Lint markdown files. mode: check (default) or fix
 md-lint mode=check:
