@@ -8,6 +8,14 @@ docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir 
 check := "check"
 fix := "fix"
 
+# Symlink config files into the invocation directory
+init:
+    #!/usr/bin/env sh
+    rel=$(realpath --relative-to {{ local_dir }} {{ source_directory() }})
+    ln --symbolic --force "$rel/.yamllint.yml" {{ local_dir }}/.yamllint.yml
+    ln --symbolic --force "$rel/.markdownlint.yml" {{ local_dir }}/.markdownlint.yml
+    ln --symbolic --force "$rel/.commitlintrc.yml" {{ local_dir }}/.commitlintrc.yml
+
 # Run all linters
 lint: commit-lint md-lint yaml-lint just-fmt
 
