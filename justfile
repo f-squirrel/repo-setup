@@ -17,7 +17,7 @@ init:
     ln --symbolic --force "$rel/.commitlintrc.yml" {{ local_dir }}/.commitlintrc.yml
 
 # Run all linters
-lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead
+lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check
 
 nix_docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo"
 nix_run := nix_docker_run + " nixos/nix nix --extra-experimental-features 'nix-command flakes'"
@@ -54,3 +54,7 @@ yaml-lint:
 # Lint markdown files. mode: check (default) or fix
 md-lint mode=check:
     {{ docker_run }} davidanson/markdownlint-cli2 {{ if mode == fix { "--fix" } else { "" } }} "**/*.md"
+
+# Check all links in files
+link-check:
+    {{ docker_run }} lycheeverse/lychee --no-progress .

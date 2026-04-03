@@ -65,6 +65,7 @@ just <target>
 | `nix-lint fix`  | Auto-fix Nix antipatterns                                       |
 | `nix-dead`      | Find dead Nix code                                              |
 | `nix-dead fix`  | Remove dead Nix code                                            |
+| `link-check`    | Check all links in files                                        |
 
 ## Configuration files
 
