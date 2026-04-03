@@ -17,7 +17,7 @@ init:
     ln --symbolic --force "$rel/.commitlintrc.yml" {{ local_dir }}/.commitlintrc.yml
 
 # Run all linters
-lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check
+lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check shell-lint
 
 nix_docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo"
 nix_run := nix_docker_run + " nixos/nix nix --extra-experimental-features 'nix-command flakes'"
@@ -58,3 +58,8 @@ md-lint mode=check:
 # Check all links in files
 link-check:
     {{ docker_run }} lycheeverse/lychee --no-progress .
+
+# Lint shell scripts (fix is not supported by shellcheck)
+shell-lint:
+    {{ docker_run }} --entrypoint sh koalaman/shellcheck-alpine \
+        -c "find . -name '*.sh' -not -path './.git/*' | xargs -r shellcheck"
