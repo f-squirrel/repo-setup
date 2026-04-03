@@ -1,4 +1,4 @@
-set quiet
+set quiet := true
 
 local_dir := invocation_directory()
 first_commit := `git rev-list --max-parents=0 HEAD`
@@ -11,15 +11,15 @@ lint: commit-lint md-lint just-fmt
 
 # Format justfile. mode: check (default) or fix
 just-fmt mode="check":
-    just --unstable {{if mode == "fix" { "--fmt" } else { "--fmt --check" }}} --justfile {{local_dir}}/justfile
+    just --unstable {{ if mode == "fix" { "--fmt" } else { "--fmt --check" } }} --justfile {{ local_dir }}/justfile
 
 # Check all commits follow Conventional Commits specification
 commit-lint:
-    {{docker_run}} \
+    {{ docker_run }} \
         commitlint/commitlint \
-        --from {{first_commit}} \
+        --from {{ first_commit }} \
         --to HEAD
 
 # Lint markdown files. mode: check (default) or fix
 md-lint mode="check":
-    {{docker_run}} davidanson/markdownlint-cli2 {{if mode == "fix" { "--fix" } else { "" }}} "**/*.md"
+    {{ docker_run }} davidanson/markdownlint-cli2 {{ if mode == "fix" { "--fix" } else { "" } }} "**/*.md"
