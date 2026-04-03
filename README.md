@@ -39,11 +39,14 @@ Run checks from the root of the parent project:
 just -f repo-setup/justfile <target>
 ```
 
-| Target        | Description                                                     |
-|---------------|-----------------------------------------------------------------|
-| `commit-lint` | Check all commits follow the Conventional Commits specification |
-| `md-lint`     | Check markdown files for style issues                           |
-| `md-lint fix` | Auto-fix markdown style issues                                  |
+| Target         | Description                                                     |
+|----------------|-----------------------------------------------------------------|
+| `lint`         | Run all linters                                                 |
+| `commit-lint`  | Check all commits follow the Conventional Commits specification |
+| `md-lint`      | Check markdown files for style issues                           |
+| `md-lint fix`  | Auto-fix markdown style issues                                  |
+| `just-fmt`     | Check justfile formatting                                       |
+| `just-fmt fix` | Auto-fix justfile formatting                                    |
 
 ## Configuration
 
