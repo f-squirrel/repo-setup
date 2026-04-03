@@ -1,3 +1,5 @@
+set quiet
+
 local_dir := invocation_directory()
 first_commit := `git rev-list --max-parents=0 HEAD`
 uid := `id -u`
