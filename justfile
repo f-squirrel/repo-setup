@@ -17,24 +17,7 @@ init:
     ln --symbolic --force "$rel/.commitlintrc.yml" {{ local_dir }}/.commitlintrc.yml
 
 # Run all linters
-lint: commit-lint md-lint yaml-lint just-fmt nix-fmt nix-lint nix-dead link-check shell-lint kdl-fmt
-
-nix_docker_run := "docker run --tty --rm --volume " + local_dir + ":/repo --workdir /repo"
-nix_run := nix_docker_run + " nixos/nix nix --extra-experimental-features 'nix-command flakes'"
-
-# Format Nix files. mode: check (default) or fix
-nix-fmt mode=check:
-    #!/usr/bin/env sh
-    docker run --tty --rm --volume {{ local_dir }}:/repo --workdir /repo nixos/nix \
-        sh -c "find . -name '*.nix' -not -path './.git/*' | xargs -r nix --extra-experimental-features 'nix-command flakes' run nixpkgs#nixfmt -- {{ if mode == fix { "" } else { "--check" } }}"
-
-# Lint Nix files for antipatterns
-nix-lint mode=check:
-    {{ nix_run }} run nixpkgs#statix -- {{ if mode == fix { "fix" } else { "check" } }} .
-
-# Find dead Nix code
-nix-dead mode=check:
-    {{ nix_run }} run nixpkgs#deadnix -- {{ if mode == fix { "--edit" } else { "--fail" } }} .
+lint-base: commit-lint md-lint yaml-lint just-fmt link-check shell-lint kdl-fmt
 
 # Format justfile. mode: check (default) or fix
 just-fmt mode=check:

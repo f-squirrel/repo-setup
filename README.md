@@ -52,19 +52,13 @@ just <target>
 | Target          | Description                                                     |
 |-----------------|-----------------------------------------------------------------|
 | `init`          | Symlink linter configs into the repo root                       |
-| `lint`          | Run all linters                                                 |
+| `lint-base`     | Run all linters                                                 |
 | `commit-lint`   | Check all commits follow the Conventional Commits specification |
 | `md-lint`       | Check Markdown files for style issues                           |
 | `md-lint fix`   | Auto-fix Markdown style issues                                  |
 | `yaml-lint`     | Lint YAML files                                                 |
 | `just-fmt`      | Check justfile formatting                                       |
 | `just-fmt fix`  | Auto-fix justfile formatting                                    |
-| `nix-fmt`       | Check Nix file formatting                                       |
-| `nix-fmt fix`   | Auto-fix Nix file formatting                                    |
-| `nix-lint`      | Lint Nix files for antipatterns                                 |
-| `nix-lint fix`  | Auto-fix Nix antipatterns                                       |
-| `nix-dead`      | Find dead Nix code                                              |
-| `nix-dead fix`  | Remove dead Nix code                                            |
 | `link-check`    | Check all links in files                                        |
 
 ## Configuration files
